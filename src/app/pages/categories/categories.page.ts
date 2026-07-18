@@ -6,11 +6,10 @@ import {
   IonList, IonItem, IonLabel, IonButton,
   IonFab, IonFabButton, IonIcon, IonModal,
   IonInput, IonBackButton, IonButtons,
-  IonItemSliding, IonItemOptions, IonItemOption,
-  IonAlert, IonChip, IonFooter,
+  IonAlert, IonFooter,
 } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
-import { addOutline, createOutline, trashOutline, closeOutline } from 'ionicons/icons';
+import { addOutline, createOutline, trashOutline, closeOutline, checkmarkOutline, listOutline } from 'ionicons/icons';
 import { CategoryService } from 'src/app/services/category.service';
 import { Category } from 'src/app/models/category.model';
 
@@ -24,8 +23,7 @@ import { Category } from 'src/app/models/category.model';
     IonList, IonItem, IonLabel, IonButton,
     IonFab, IonFabButton, IonIcon, IonModal,
     IonInput, IonBackButton, IonButtons,
-    IonItemSliding, IonItemOptions, IonItemOption,
-    IonAlert, IonChip, IonFooter,
+    IonAlert, IonFooter,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -34,13 +32,13 @@ export class CategoriesPage implements OnInit {
   showModal = false;
   editingCategory: Category | null = null;
   formName = '';
-  formColor = '#3880ff';
+  formColor = '#6366f1';
   showDeleteAlert = false;
   deleteTargetId: string | null = null;
-  colorOptions = ['#3880ff', '#eb445a', '#2dd36f', '#ffc409', '#5260ff', '#8e24aa', '#00bcd4', '#ff7043'];
+  colorOptions = ['#6366f1', '#a855f7', '#ec4899', '#ef4444', '#f59e0b', '#22c55e', '#06b6d4', '#3b82f6', '#8b5cf6', '#14b8a6'];
 
   constructor(private categoryService: CategoryService) {
-    addIcons({ addOutline, createOutline, trashOutline, closeOutline });
+    addIcons({ addOutline, createOutline, trashOutline, closeOutline, checkmarkOutline, listOutline });
   }
 
   ngOnInit(): void {
@@ -50,7 +48,7 @@ export class CategoriesPage implements OnInit {
   openCreate(): void {
     this.editingCategory = null;
     this.formName = '';
-    this.formColor = '#3880ff';
+    this.formColor = '#6366f1';
     this.showModal = true;
   }
 

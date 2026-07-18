@@ -1,0 +1,51 @@
+.filter-container {
+  padding: 8px 16px 4px;
+  overflow-x: auto;
+}
+
+.chips-row {
+  display: flex;
+  gap: 8px;
+  flex-wrap: nowrap;
+  padding-bottom: 4px;
+}
+
+.filter-chip {
+  --background: var(--app-card-bg);
+  border-radius: 20px;
+  padding: 4px 14px;
+  min-height: 32px;
+  font-weight: 500;
+  font-size: 0.85rem;
+  box-shadow: var(--app-shadow-sm);
+  border: 1px solid rgba(99, 102, 241, 0.06);
+  transition: all 0.2s ease;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.filter-chip.active {
+  --background: rgba(99, 102, 241, 0.1);
+  border-color: var(--chip-color, var(--ion-color-primary));
+}
+
+.all-chip.active {
+  --background: var(--ion-color-primary);
+  color: white;
+  --color: white;
+}
+
+.chip-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  display: inline-block;
+  margin-right: 4px;
+  flex-shrink: 0;
+}
+
+.chip-close {
+  font-size: 0.8rem;
+  margin-left: 4px;
+  opacity: 0.7;
+}

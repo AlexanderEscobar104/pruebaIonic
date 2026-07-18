@@ -1,8 +1,22 @@
-<ion-segment [value]="selectedId || 'all'" (ionChange)="onSegmentChange($event)">
-  <ion-segment-button value="all">
-    <ion-label>Todas</ion-label>
-  </ion-segment-button>
-  <ion-segment-button *ngFor="let cat of categories" [value]="cat.id">
-    <ion-label>{{ cat.name }}</ion-label>
-  </ion-segment-button>
-</ion-segment>
+<div class="filter-container">
+  <div class="chips-row">
+    <ion-chip
+      [class.active]="!selectedId"
+      class="filter-chip all-chip"
+      (click)="selectCategory(null)"
+    >
+      <ion-label>Todas</ion-label>
+    </ion-chip>
+    <ion-chip
+      *ngFor="let cat of categories"
+      [class.active]="selectedId === cat.id"
+      class="filter-chip"
+      [ngStyle]="{ '--chip-color': cat.color }"
+      (click)="selectCategory(cat.id)"
+    >
+      <span class="chip-dot" [style.background]="cat.color"></span>
+      <ion-label>{{ cat.name }}</ion-label>
+      <ion-icon *ngIf="selectedId === cat.id" name="close-outline" class="chip-close" (click)="clearFilter($event)" />
+    </ion-chip>
+  </div>
+</div>

@@ -1,2 +1,58 @@
-// For information on how to create your own theme, please refer to:
-// https://ionicframework.com/docs/theming/
+:root {
+  --ion-color-primary: #6366f1;
+  --ion-color-primary-rgb: 99, 102, 241;
+  --ion-color-primary-contrast: #ffffff;
+  --ion-color-primary-shade: #575bd5;
+  --ion-color-primary-tint: #7375f3;
+
+  --ion-color-secondary: #a855f7;
+  --ion-color-secondary-rgb: 168, 85, 247;
+  --ion-color-secondary-contrast: #ffffff;
+
+  --ion-color-tertiary: #06b6d4;
+  --ion-color-tertiary-rgb: 6, 182, 212;
+
+  --ion-color-success: #22c55e;
+  --ion-color-warning: #f59e0b;
+  --ion-color-danger: #ef4444;
+  --ion-color-medium: #94a3b8;
+  --ion-color-light: #f8fafc;
+
+  --ion-font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+
+  --ion-border-radius: 16px;
+  --ion-item-border-radius: 12px;
+
+  --app-bg: #f1f5f9;
+  --app-card-bg: #ffffff;
+  --app-shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.06), 0 1px 2px rgba(0, 0, 0, 0.04);
+  --app-shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.07), 0 2px 4px -1px rgba(0, 0, 0, 0.04);
+  --app-shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -2px rgba(0, 0, 0, 0.04);
+  --app-gradient: linear-gradient(135deg, #6366f1 0%, #a855f7 50%, #ec4899 100%);
+  --app-gradient-subtle: linear-gradient(135deg, rgba(99, 102, 241, 0.05) 0%, rgba(168, 85, 247, 0.05) 100%);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --ion-color-primary: #818cf8;
+    --ion-color-primary-rgb: 129, 140, 248;
+    --ion-color-primary-contrast: #000000;
+    --ion-color-primary-shade: #727bda;
+    --ion-color-primary-tint: #8f98f9;
+
+    --ion-background-color: #0f172a;
+    --ion-background-color-rgb: 15, 23, 42;
+    --ion-text-color: #f1f5f9;
+    --ion-text-color-rgb: 241, 245, 249;
+    --ion-item-background: #1e293b;
+    --ion-toolbar-background: rgba(15, 23, 42, 0.8);
+    --ion-tab-bar-background: #1e293b;
+
+    --app-bg: #0f172a;
+    --app-card-bg: #1e293b;
+    --app-shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.3);
+    --app-shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.4);
+    --app-shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.4);
+    --app-gradient-subtle: linear-gradient(135deg, rgba(129, 140, 248, 0.08) 0%, rgba(168, 85, 247, 0.08) 100%);
+  }
+}

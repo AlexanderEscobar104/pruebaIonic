@@ -12,7 +12,7 @@ import {
   IonItemGroup,
 } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
-import { addOutline, listOutline, checkmarkDoneOutline } from 'ionicons/icons';
+import { addOutline, listOutline, checkmarkDoneOutline, sparklesOutline, calendarOutline } from 'ionicons/icons';
 import { TaskService } from 'src/app/services/task.service';
 import { CategoryService } from 'src/app/services/category.service';
 import { RemoteConfigService } from 'src/app/services/remote-config.service';
@@ -53,7 +53,7 @@ export class HomePage implements OnInit, OnDestroy {
     private categoryService: CategoryService,
     private remoteConfig: RemoteConfigService,
   ) {
-    addIcons({ addOutline, listOutline, checkmarkDoneOutline });
+    addIcons({ addOutline, listOutline, checkmarkDoneOutline, sparklesOutline, calendarOutline });
   }
 
   ngOnInit(): void {
@@ -119,5 +119,14 @@ export class HomePage implements OnInit, OnDestroy {
 
   get pendingCount(): number {
     return this.taskService.getTasks().filter((t) => !t.completed).length;
+  }
+
+  get stats(): { total: number; completed: number; pending: number } {
+    const all = this.taskService.getTasks();
+    return {
+      total: all.length,
+      completed: all.filter((t) => t.completed).length,
+      pending: all.filter((t) => !t.completed).length,
+    };
   }
 }

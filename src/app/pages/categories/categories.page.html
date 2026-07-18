@@ -1,4 +1,4 @@
-<ion-header>
+<ion-header class="ion-no-border">
   <ion-toolbar>
     <ion-buttons slot="start">
       <ion-back-button defaultHref="/home" />
@@ -8,36 +8,41 @@
 </ion-header>
 
 <ion-content>
-  <ion-list>
-    <ion-item-sliding *ngFor="let cat of categories">
-      <ion-item>
-        <ion-chip slot="start" [style.background]="cat.color" style="width:16px;height:16px;border-radius:50%" />
-        <ion-label>{{ cat.name }}</ion-label>
-        <ion-button slot="end" fill="clear" (click)="openEdit(cat)">
-          <ion-icon name="create-outline" slot="icon-only" />
-        </ion-button>
-        <ion-button slot="end" fill="clear" color="danger" (click)="confirmDelete(cat.id)">
-          <ion-icon name="trash-outline" slot="icon-only" />
-        </ion-button>
-      </ion-item>
-      <ion-item-options side="end">
-        <ion-item-option color="danger" (click)="confirmDelete(cat.id)">
-          <ion-icon slot="icon-only" name="trash-outline" />
-        </ion-item-option>
-      </ion-item-options>
-    </ion-item-sliding>
-  </ion-list>
+  <div class="section-hint" *ngIf="categories.length > 0">
+    <p>Organiza tus tareas por categorías</p>
+  </div>
 
-  <ion-fab vertical="bottom" horizontal="end" slot="fixed">
-    <ion-fab-button (click)="openCreate()">
-      <ion-icon name="add-outline" />
-    </ion-fab-button>
-  </ion-fab>
+  <ion-list>
+    <ion-item *ngFor="let cat of categories" class="cat-card">
+      <div class="cat-color-dot" [style.background]="cat.color" slot="start"></div>
+      <ion-label class="cat-label">{{ cat.name }}</ion-label>
+      <ion-button slot="end" fill="clear" class="action-btn" (click)="openEdit(cat)">
+        <ion-icon name="create-outline" slot="icon-only" />
+      </ion-button>
+      <ion-button slot="end" fill="clear" class="action-btn delete-action" (click)="confirmDelete(cat.id)">
+        <ion-icon name="trash-outline" slot="icon-only" />
+      </ion-button>
+    </ion-item>
+
+    <div class="empty-state" *ngIf="categories.length === 0">
+      <div class="empty-icon">
+        <ion-icon name="list-outline" />
+      </div>
+      <h3>Sin categorías</h3>
+      <p>Crea tu primera categoría</p>
+    </div>
+  </ion-list>
 </ion-content>
 
-<ion-modal [isOpen]="showModal" (didDismiss)="closeModal()">
+<ion-fab vertical="bottom" horizontal="end" slot="fixed">
+  <ion-fab-button (click)="openCreate()">
+    <ion-icon name="add-outline" />
+  </ion-fab-button>
+</ion-fab>
+
+<ion-modal [isOpen]="showModal" (didDismiss)="closeModal()" [breakpoints]="[0, 0.5]" [initialBreakpoint]="0.5">
   <ng-template>
-    <ion-header>
+    <ion-header class="ion-no-border">
       <ion-toolbar>
         <ion-title>{{ editingCategory ? 'Editar' : 'Nueva' }} Categoría</ion-title>
         <ion-buttons slot="end">
@@ -47,27 +52,37 @@
         </ion-buttons>
       </ion-toolbar>
     </ion-header>
-    <ion-content class="ion-padding">
-      <ion-item>
-        <ion-input label="Nombre" labelPlacement="stacked" [(ngModel)]="formName" placeholder="Ej: Personal" />
-      </ion-item>
-      <ion-item>
-        <ion-label>Color</ion-label>
-      </ion-item>
-      <div class="color-picker">
-        <div
-          *ngFor="let c of colorOptions"
-          class="color-swatch"
-          [style.background]="c"
-          [class.selected]="formColor === c"
-          (click)="formColor = c"
-        ></div>
+    <ion-content class="ion-padding modal-content">
+      <div class="modal-field">
+        <label class="field-label">Nombre</label>
+        <ion-input
+          [(ngModel)]="formName"
+          placeholder="Ej: Personal, Trabajo..."
+          class="modern-input"
+        />
+      </div>
+
+      <div class="modal-field">
+        <label class="field-label">Color</label>
+        <div class="color-grid">
+          <div
+            *ngFor="let c of colorOptions"
+            class="color-swatch"
+            [style.background]="c"
+            [class.selected]="formColor === c"
+            (click)="formColor = c"
+          >
+            <ion-icon *ngIf="formColor === c" name="checkmark-outline" class="check-icon" />
+          </div>
+        </div>
       </div>
     </ion-content>
-    <ion-footer class="ion-padding">
-      <ion-button expand="block" (click)="save()">
-        {{ editingCategory ? 'Guardar' : 'Crear' }}
-      </ion-button>
+    <ion-footer class="ion-no-border">
+      <div class="modal-footer">
+        <ion-button expand="block" (click)="save()" [disabled]="!formName.trim()">
+          {{ editingCategory ? 'Guardar cambios' : 'Crear categoría' }}
+        </ion-button>
+      </div>
     </ion-footer>
   </ng-template>
 </ion-modal>
@@ -75,6 +90,6 @@
 <ion-alert
   [isOpen]="showDeleteAlert"
   header="Eliminar categoría"
-  message="¿Estás seguro de que deseas eliminar esta categoría?"
+  message="¿Estás seguro? Las tareas con esta categoría quedarán sin categoría."
   [buttons]="alertButtons"
 />

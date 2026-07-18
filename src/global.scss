@@ -1,37 +1,127 @@
-/*
- * App Global CSS
- * ----------------------------------------------------------------------------
- * Put style rules here that you want to apply globally. These styles are for
- * the entire app and not just one component. Additionally, this file can be
- * used as an entry point to import other CSS/Sass files to be included in the
- * output CSS.
- * For more information on global stylesheets, visit the documentation:
- * https://ionicframework.com/docs/layout/global-stylesheets
- */
-
-/* Core CSS required for Ionic components to work properly */
 @import "@ionic/angular/css/core.css";
-
-/* Basic CSS for apps built with Ionic */
 @import "@ionic/angular/css/normalize.css";
 @import "@ionic/angular/css/structure.css";
 @import "@ionic/angular/css/typography.css";
 @import "@ionic/angular/css/display.css";
-
-/* Optional CSS utils that can be commented out */
 @import "@ionic/angular/css/padding.css";
 @import "@ionic/angular/css/float-elements.css";
 @import "@ionic/angular/css/text-alignment.css";
 @import "@ionic/angular/css/text-transformation.css";
 @import "@ionic/angular/css/flex-utils.css";
-
-/**
- * Ionic Dark Mode
- * -----------------------------------------------------
- * For more info, please see:
- * https://ionicframework.com/docs/theming/dark-mode
- */
-
-/* @import "@ionic/angular/css/palettes/dark.always.css"; */
-/* @import "@ionic/angular/css/palettes/dark.class.css"; */
 @import '@ionic/angular/css/palettes/dark.system.css';
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+ion-content {
+  --background: var(--app-bg);
+}
+
+ion-toolbar {
+  --background: rgba(255, 255, 255, 0.7);
+  -webkit-backdrop-filter: blur(20px);
+  backdrop-filter: blur(20px);
+  --border-style: none;
+  --padding-top: 8px;
+  --padding-bottom: 8px;
+}
+
+ion-header ion-toolbar:last-of-type {
+  --border-width: 0;
+}
+
+ion-list {
+  background: transparent !important;
+  padding: 8px 16px !important;
+}
+
+ion-item {
+  --background: var(--app-card-bg);
+  --border-radius: 12px;
+  --padding-start: 16px;
+  --padding-end: 16px;
+  --inner-padding-end: 8px;
+  --min-height: 56px;
+  margin-bottom: 8px;
+  border-radius: 12px;
+  box-shadow: var(--app-shadow-sm);
+  --border-style: none;
+  --border-width: 0;
+  --inner-border-width: 0;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+ion-item:active {
+  transform: scale(0.98);
+}
+
+ion-fab-button {
+  --background: var(--app-gradient);
+  --box-shadow: 0 6px 20px rgba(99, 102, 241, 0.35);
+  width: 56px;
+  height: 56px;
+}
+
+ion-segment {
+  background: var(--app-card-bg);
+  border-radius: 12px;
+  padding: 4px;
+  box-shadow: var(--app-shadow-sm);
+}
+
+ion-segment-button {
+  --border-radius: 8px;
+  --indicator-height: 0;
+  min-height: 36px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  letter-spacing: 0.01em;
+}
+
+ion-segment-button.segment-button-checked {
+  background: var(--ion-color-primary);
+  color: white !important;
+  --color-checked: white;
+  border-radius: 8px;
+}
+
+ion-modal {
+  --border-radius: 20px;
+  --box-shadow: var(--app-shadow-lg);
+}
+
+ion-modal ion-header ion-toolbar:first-of-type {
+  --background: var(--app-card-bg);
+}
+
+ion-alert {
+  --border-radius: 16px;
+}
+
+ion-input, ion-select {
+  --border-radius: 10px;
+  --padding-start: 12px;
+  --background: rgba(99, 102, 241, 0.04);
+  border-radius: 10px;
+}
+
+ion-button {
+  --border-radius: 10px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  text-transform: none;
+  font-size: 0.95rem;
+  height: 48px;
+}
+
+ion-button[fill="solid"] {
+  --box-shadow: 0 4px 14px rgba(99, 102, 241, 0.25);
+}
+
+ion-back-button {
+  --icon-font-size: 22px;
+}
+
+ion-chip {
+  font-weight: 500;
+  border-radius: 8px;
+}

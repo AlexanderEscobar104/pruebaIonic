@@ -3,7 +3,7 @@ import { IonItem, IonLabel, IonCheckbox, IonButton, IonIcon } from '@ionic/angul
 import { NgIf, NgStyle, DatePipe } from '@angular/common';
 import { Task } from 'src/app/models/task.model';
 import { Category } from 'src/app/models/category.model';
-import { trashOutline, checkmarkOutline } from 'ionicons/icons';
+import { trashOutline, checkmarkCircle, ellipseOutline } from 'ionicons/icons';
 import { addIcons } from 'ionicons';
 
 @Component({
@@ -20,7 +20,7 @@ export class TaskItemComponent {
   @Output() delete = new EventEmitter<string>();
 
   constructor() {
-    addIcons({ trashOutline, checkmarkOutline });
+    addIcons({ trashOutline, checkmarkCircle, ellipseOutline });
   }
 
   onToggle(): void {
