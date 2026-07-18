@@ -17,7 +17,7 @@ jobs:
         with:
           node-version: 22
 
-      - name: Install Capacitor CLI
+      - name: Install dependencies
         run: |
           npm install -g @capacitor/cli@latest
           npm install --legacy-peer-deps
@@ -27,15 +27,29 @@ jobs:
       - name: Build web app
         run: npx ng build --configuration production
 
-      - name: Sync Capacitor iOS
-        run: cap sync ios
+      - name: Generate iOS project on native runner
+        run: |
+          rm -rf ios
+          npx cap init TodoApp io.ionic.todoapp --web-dir www
+          npx cap add ios
         env:
           CI: true
+
+      - name: List iOS project structure
+        run: |
+          echo "--- ios/App/ contents ---"
+          ls -la ios/App/
+          echo "--- xcworkspace check ---"
+          find ios -name "*.xcworkspace" -type d
+          echo "--- xcodeproj check ---"
+          find ios -name "*.xcodeproj" -type d
 
       - name: Resolve Swift packages
         run: |
           cd ios/App
-          xcodebuild -resolvePackageDependencies -workspace App.xcworkspace -scheme App
+          xcodebuild -resolvePackageDependencies \
+                     -workspace App.xcworkspace \
+                     -scheme App
 
       - name: Build archive (unsigned)
         run: |
@@ -48,9 +62,9 @@ jobs:
                      archive \
                      CODE_SIGNING_ALLOWED=NO \
                      CODE_SIGN_IDENTITY="" \
-                     PROVISIONING_PROFILE_SPECIFIER="" || echo "Archive build finished (unsigned)"
+                     PROVISIONING_PROFILE_SPECIFIER="" || echo "Archive done (unsigned)"
 
-      - name: Build for simulator (unsigned .app)
+      - name: Build for simulator
         run: |
           cd ios/App
           xcodebuild -workspace App.xcworkspace \
@@ -58,9 +72,9 @@ jobs:
                      -configuration Debug \
                      -sdk iphonesimulator \
                      -derivedDataPath build \
-                     CODE_SIGNING_ALLOWED=NO || echo "Simulator build attempt logged"
+                     CODE_SIGNING_ALLOWED=NO || true
 
-      - name: Export IPA (if archive signed)
+      - name: Export IPA (requires signing)
         run: |
           if [ -d "ios/App/App.xcarchive" ]; then
             cd ios/App
@@ -68,7 +82,7 @@ jobs:
                        -archivePath App.xcarchive \
                        -exportOptionsPlist ExportOptions.plist \
                        -exportPath ./output \
-                       CODE_SIGNING_ALLOWED=NO || echo "IPA export requires Apple Developer cert"
+                       CODE_SIGNING_ALLOWED=NO || echo "IPA export needs Apple Developer cert"
           fi
 
       - name: Upload artifacts
