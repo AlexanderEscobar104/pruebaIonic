@@ -1,0 +1,45 @@
+name: Build IPA (iOS)
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [master]
+
+jobs:
+  build-ios:
+    runs-on: macos-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install dependencies
+        run: npm ci --legacy-peer-deps
+
+      - name: Build web app
+        run: npx ng build --configuration production
+
+      - name: Sync Capacitor iOS
+        run: npx cap sync ios
+
+      - name: Build IPA
+        run: |
+          cd ios/App
+          xcodebuild -workspace App.xcworkspace \
+                     -scheme App \
+                     -configuration Release \
+                     -archivePath App.xcarchive \
+                     archive
+          xcodebuild -exportArchive \
+                     -archivePath App.xcarchive \
+                     -exportOptionsPlist ExportOptions.plist \
+                     -exportPath ./output
+
+      - name: Upload IPA
+        uses: actions/upload-artifact@v4
+        with:
+          name: todo-app.ipa
+          path: ios/App/output/*.ipa
