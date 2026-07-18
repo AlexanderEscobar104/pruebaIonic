@@ -1,0 +1,80 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/home" />
+    </ion-buttons>
+    <ion-title>Categorías</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <ion-list>
+    <ion-item-sliding *ngFor="let cat of categories">
+      <ion-item>
+        <ion-chip slot="start" [style.background]="cat.color" style="width:16px;height:16px;border-radius:50%" />
+        <ion-label>{{ cat.name }}</ion-label>
+        <ion-button slot="end" fill="clear" (click)="openEdit(cat)">
+          <ion-icon name="create-outline" slot="icon-only" />
+        </ion-button>
+        <ion-button slot="end" fill="clear" color="danger" (click)="confirmDelete(cat.id)">
+          <ion-icon name="trash-outline" slot="icon-only" />
+        </ion-button>
+      </ion-item>
+      <ion-item-options side="end">
+        <ion-item-option color="danger" (click)="confirmDelete(cat.id)">
+          <ion-icon slot="icon-only" name="trash-outline" />
+        </ion-item-option>
+      </ion-item-options>
+    </ion-item-sliding>
+  </ion-list>
+
+  <ion-fab vertical="bottom" horizontal="end" slot="fixed">
+    <ion-fab-button (click)="openCreate()">
+      <ion-icon name="add-outline" />
+    </ion-fab-button>
+  </ion-fab>
+</ion-content>
+
+<ion-modal [isOpen]="showModal" (didDismiss)="closeModal()">
+  <ng-template>
+    <ion-header>
+      <ion-toolbar>
+        <ion-title>{{ editingCategory ? 'Editar' : 'Nueva' }} Categoría</ion-title>
+        <ion-buttons slot="end">
+          <ion-button (click)="closeModal()">
+            <ion-icon name="close-outline" slot="icon-only" />
+          </ion-button>
+        </ion-buttons>
+      </ion-toolbar>
+    </ion-header>
+    <ion-content class="ion-padding">
+      <ion-item>
+        <ion-input label="Nombre" labelPlacement="stacked" [(ngModel)]="formName" placeholder="Ej: Personal" />
+      </ion-item>
+      <ion-item>
+        <ion-label>Color</ion-label>
+      </ion-item>
+      <div class="color-picker">
+        <div
+          *ngFor="let c of colorOptions"
+          class="color-swatch"
+          [style.background]="c"
+          [class.selected]="formColor === c"
+          (click)="formColor = c"
+        ></div>
+      </div>
+    </ion-content>
+    <ion-footer class="ion-padding">
+      <ion-button expand="block" (click)="save()">
+        {{ editingCategory ? 'Guardar' : 'Crear' }}
+      </ion-button>
+    </ion-footer>
+  </ng-template>
+</ion-modal>
+
+<ion-alert
+  [isOpen]="showDeleteAlert"
+  header="Eliminar categoría"
+  message="¿Estás seguro de que deseas eliminar esta categoría?"
+  [buttons]="alertButtons"
+/>

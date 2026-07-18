@@ -1,0 +1,17 @@
+<ion-item [class.completed]="task.completed">
+  <ion-checkbox slot="start" [checked]="task.completed" (ionChange)="onToggle()" />
+  <ion-label>
+    <h2>{{ task.title }}</h2>
+    <div class="task-meta">
+      <span *ngIf="category" class="category-badge" [ngStyle]="{ background: category.color }">
+        {{ category.name }}
+      </span>
+      <span *ngIf="showDeadline && task.deadline" class="deadline">
+        {{ task.deadline | date:'shortDate' }}
+      </span>
+    </div>
+  </ion-label>
+  <ion-button slot="end" fill="clear" color="danger" (click)="onDelete()">
+    <ion-icon name="trash-outline" slot="icon-only" />
+  </ion-button>
+</ion-item>

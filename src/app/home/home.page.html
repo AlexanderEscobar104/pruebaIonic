@@ -1,0 +1,93 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>To-Do List</ion-title>
+    <ion-buttons slot="end">
+      <ion-button routerLink="/categories">
+        <ion-icon name="list-outline" slot="icon-only" />
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <app-category-filter
+    [categories]="categories"
+    [selectedId]="filteredCategoryId"
+    (selectionChange)="onCategoryFilter($event)"
+  />
+
+  <div class="filter-bar">
+    <ion-segment [value]="activeFilter" (ionChange)="onFilterChange($event)">
+      <ion-segment-button value="all">
+        <ion-label>Todas</ion-label>
+      </ion-segment-button>
+      <ion-segment-button value="pending">
+        <ion-label>Pendientes</ion-label>
+      </ion-segment-button>
+      <ion-segment-button value="completed">
+        <ion-label>Completadas</ion-label>
+      </ion-segment-button>
+    </ion-segment>
+  </div>
+
+  <ion-list>
+    <ion-item-group *ngFor="let task of filteredTasks; trackBy: trackById">
+      <app-task-item
+        [task]="task"
+        [category]="getTaskCategory(task.categoryId)"
+        [showDeadline]="showDeadline"
+        (toggle)="toggleTask($event)"
+        (delete)="deleteTask($event)"
+      />
+    </ion-item-group>
+
+    <ion-item *ngIf="filteredTasks.length === 0">
+      <ion-label class="ion-text-center">
+        <ion-text color="medium">
+          <h3>No hay tareas</h3>
+          <p>Agrega una nueva tarea usando el campo de abajo</p>
+        </ion-text>
+      </ion-label>
+    </ion-item>
+  </ion-list>
+</ion-content>
+
+<ion-footer class="ion-padding">
+  <form (ngSubmit)="addTask()">
+    <ion-item>
+      <ion-input
+        label="Nueva tarea"
+        labelPlacement="stacked"
+        [(ngModel)]="newTaskTitle"
+        name="taskTitle"
+        placeholder="Escribe una tarea..."
+      />
+    </ion-item>
+    <ion-item *ngIf="categories.length > 0">
+      <ion-label>Categoría</ion-label>
+      <ion-select [(ngModel)]="newTaskCategory" name="taskCategory" interface="popover">
+        <ion-select-option value="">Sin categoría</ion-select-option>
+        <ion-select-option *ngFor="let cat of categories" [value]="cat.id">
+          {{ cat.name }}
+        </ion-select-option>
+      </ion-select>
+    </ion-item>
+    <ion-item *ngIf="showDeadline">
+      <ion-input
+        label="Fecha límite"
+        labelPlacement="stacked"
+        type="date"
+        [(ngModel)]="newTaskDeadline"
+        name="taskDeadline"
+      />
+    </ion-item>
+    <ion-button expand="block" type="submit" class="ion-margin-top">
+      <ion-icon name="add-outline" slot="start" />
+      Agregar tarea
+    </ion-button>
+  </form>
+
+  <ion-text color="medium" class="ion-text-center" style="display:block;font-size:0.8rem;margin-top:8px">
+    {{ pendingCount }} tareas pendientes
+  </ion-text>
+</ion-footer>

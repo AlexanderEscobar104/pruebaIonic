@@ -1,0 +1,8 @@
+export interface Task {
+  id: string;
+  title: string;
+  completed: boolean;
+  categoryId: string | null;
+  deadline?: string;
+  createdAt: number;
+}

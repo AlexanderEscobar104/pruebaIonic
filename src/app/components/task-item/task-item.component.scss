@@ -1,0 +1,27 @@
+ion-item.completed {
+  --background: #f4f4f4;
+  opacity: 0.7;
+
+  h2 {
+    text-decoration: line-through;
+  }
+}
+
+.task-meta {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  margin-top: 4px;
+}
+
+.category-badge {
+  font-size: 0.75rem;
+  padding: 2px 8px;
+  border-radius: 12px;
+  color: #fff;
+}
+
+.deadline {
+  font-size: 0.75rem;
+  color: var(--ion-color-medium);
+}
