@@ -27,47 +27,39 @@ jobs:
       - name: Build web app
         run: npx ng build --configuration production
 
-      - name: Sync Capacitor iOS (fix workspace)
+      - name: Regenerate iOS project for macOS
         run: |
-          cap sync ios
-          echo "=== Checking xcworkspace ==="
-          find ios -name "*.xcworkspace" -type d 2>/dev/null || echo "No xcworkspace found"
-        env:
-          CI: true
-
-      - name: Fix missing workspace if needed
-        run: |
-          if ! find ios -name "*.xcworkspace" -type d | grep -q .; then
-            echo "Workspace missing - regenerating iOS project..."
-            rm -rf ios
-            echo '{}' > capacitor.config.json
-            cap init TodoApp io.ionic.todoapp --web-dir www
-            rm capacitor.config.json
-            cap add ios
-          else
-            echo "Workspace exists, continuing..."
-          fi
+          rm -rf ios
+          mv capacitor.config.ts capacitor.config.ts.bak
+          echo '{"appId":"io.ionic.todoapp","appName":"TodoApp","webDir":"www"}' > capacitor.config.json
+          cap init TodoApp io.ionic.todoapp --web-dir www
+          rm capacitor.config.json
+          mv capacitor.config.ts.bak capacitor.config.ts
+          cap add ios
         env:
           CI: true
 
       - name: List iOS project structure
         run: |
-          echo "=== Workspaces ==="
           find ios -name "*.xcworkspace" -type d
-          echo "=== Projects ==="
-          find ios -name "*.xcodeproj" -type d
+          ls -la ios/App/
 
       - name: Resolve Swift packages
         run: |
           cd ios/App
           xcodebuild -resolvePackageDependencies \
                      -workspace App.xcworkspace \
+                     -scheme App || \
+          xcodebuild -resolvePackageDependencies \
+                     -project App.xcodeproj \
                      -scheme App
 
       - name: Build archive (unsigned)
         run: |
           cd ios/App
-          xcodebuild -workspace App.xcworkspace \
+          WS="App.xcworkspace"
+          if [ ! -d "$WS" ]; then WS="App.xcodeproj"; PRJ_FLAG="-project"; else PRJ_FLAG="-workspace"; fi
+          xcodebuild $PRJ_FLAG "$WS" \
                      -scheme App \
                      -configuration Release \
                      -sdk iphoneos \
@@ -80,23 +72,14 @@ jobs:
       - name: Build for simulator
         run: |
           cd ios/App
-          xcodebuild -workspace App.xcworkspace \
+          WS="App.xcworkspace"
+          if [ ! -d "$WS" ]; then WS="App.xcodeproj"; PRJ_FLAG="-project"; else PRJ_FLAG="-workspace"; fi
+          xcodebuild $PRJ_FLAG "$WS" \
                      -scheme App \
                      -configuration Debug \
                      -sdk iphonesimulator \
                      -derivedDataPath build \
                      CODE_SIGNING_ALLOWED=NO || true
-
-      - name: Export IPA (requires signing)
-        run: |
-          if [ -d "ios/App/App.xcarchive" ]; then
-            cd ios/App
-            xcodebuild -exportArchive \
-                       -archivePath App.xcarchive \
-                       -exportOptionsPlist ExportOptions.plist \
-                       -exportPath ./output \
-                       CODE_SIGNING_ALLOWED=NO || echo "IPA export needs signing cert"
-          fi
 
       - name: Upload artifacts
         uses: actions/upload-artifact@v4
