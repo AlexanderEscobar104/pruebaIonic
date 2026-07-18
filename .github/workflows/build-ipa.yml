@@ -27,21 +27,34 @@ jobs:
       - name: Build web app
         run: npx ng build --configuration production
 
-      - name: Generate iOS project on native runner
+      - name: Sync Capacitor iOS (fix workspace)
         run: |
-          rm -rf ios
-          npx cap init TodoApp io.ionic.todoapp --web-dir www
-          npx cap add ios
+          cap sync ios
+          echo "=== Checking xcworkspace ==="
+          find ios -name "*.xcworkspace" -type d 2>/dev/null || echo "No xcworkspace found"
+        env:
+          CI: true
+
+      - name: Fix missing workspace if needed
+        run: |
+          if ! find ios -name "*.xcworkspace" -type d | grep -q .; then
+            echo "Workspace missing - regenerating iOS project..."
+            rm -rf ios
+            echo '{}' > capacitor.config.json
+            cap init TodoApp io.ionic.todoapp --web-dir www
+            rm capacitor.config.json
+            cap add ios
+          else
+            echo "Workspace exists, continuing..."
+          fi
         env:
           CI: true
 
       - name: List iOS project structure
         run: |
-          echo "--- ios/App/ contents ---"
-          ls -la ios/App/
-          echo "--- xcworkspace check ---"
+          echo "=== Workspaces ==="
           find ios -name "*.xcworkspace" -type d
-          echo "--- xcodeproj check ---"
+          echo "=== Projects ==="
           find ios -name "*.xcodeproj" -type d
 
       - name: Resolve Swift packages
@@ -82,7 +95,7 @@ jobs:
                        -archivePath App.xcarchive \
                        -exportOptionsPlist ExportOptions.plist \
                        -exportPath ./output \
-                       CODE_SIGNING_ALLOWED=NO || echo "IPA export needs Apple Developer cert"
+                       CODE_SIGNING_ALLOWED=NO || echo "IPA export needs signing cert"
           fi
 
       - name: Upload artifacts
