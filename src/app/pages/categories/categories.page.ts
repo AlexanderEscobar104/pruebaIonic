@@ -1,4 +1,4 @@
-import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef, NgZone } from '@angular/core';
 import { NgFor, NgIf } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import {
@@ -42,6 +42,7 @@ export class CategoriesPage implements OnInit {
   constructor(
     private categoryService: CategoryService,
     private cdr: ChangeDetectorRef,
+    private ngZone: NgZone,
   ) {
     addIcons({ addOutline, createOutline, trashOutline, closeOutline, checkmarkOutline, listOutline });
   }
@@ -75,14 +76,16 @@ export class CategoriesPage implements OnInit {
     if (!this.formName.trim()) return;
     if (this.editingCategory) {
       await this.categoryService.updateCategory(this.editingCategory.id, this.formName, this.formColor);
-      this.showSuccess('Categoría actualizada');
+      this.ngZone.run(() => this.showSuccess('Categoría actualizada'));
     } else {
       await this.categoryService.addCategory(this.formName, this.formColor);
-      this.showSuccess('Categoría creada');
+      this.ngZone.run(() => this.showSuccess('Categoría creada'));
     }
-    this.categories = this.categoryService.getCategories();
-    this.closeModal();
-    this.cdr.markForCheck();
+    this.ngZone.run(() => {
+      this.categories = this.categoryService.getCategories();
+      this.closeModal();
+      this.cdr.markForCheck();
+    });
   }
 
   confirmDelete(id: string): void {
@@ -93,8 +96,11 @@ export class CategoriesPage implements OnInit {
   async onDeleteConfirm(): Promise<void> {
     if (this.deleteTargetId) {
       await this.categoryService.deleteCategory(this.deleteTargetId);
-      this.categories = this.categoryService.getCategories();
-      this.showSuccess('Categoría eliminada');
+      this.ngZone.run(() => {
+        this.categories = this.categoryService.getCategories();
+        this.showSuccess('Categoría eliminada');
+        this.cdr.markForCheck();
+      });
     }
     this.showDeleteAlert = false;
     this.deleteTargetId = null;

@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, OnDestroy, ChangeDetectionStrategy, ChangeDetectorRef, NgZone } from '@angular/core';
 import { NgFor, NgIf } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
@@ -58,6 +58,7 @@ export class HomePage implements OnInit, OnDestroy {
     private categoryService: CategoryService,
     private remoteConfig: RemoteConfigService,
     private cdr: ChangeDetectorRef,
+    private ngZone: NgZone,
   ) {
     addIcons({ addOutline, listOutline, checkmarkDoneOutline, sparklesOutline, calendarOutline });
   }
@@ -98,18 +99,22 @@ export class HomePage implements OnInit, OnDestroy {
       return;
     }
     await this.taskService.addTask(title, this.newTaskCategory || undefined, this.newTaskDeadline || undefined);
-    this.tasks = this.taskService.getTasks();
-    this.newTaskTitle = '';
-    this.newTaskCategory = '';
-    this.newTaskDeadline = '';
-    this.showSuccess('Tarea creada');
-    this.cdr.markForCheck();
+    this.ngZone.run(() => {
+      this.tasks = this.taskService.getTasks();
+      this.newTaskTitle = '';
+      this.newTaskCategory = '';
+      this.newTaskDeadline = '';
+      this.showSuccess('Tarea creada');
+      this.cdr.markForCheck();
+    });
   }
 
   async toggleTask(id: string): Promise<void> {
     await this.taskService.toggleTask(id);
-    this.tasks = this.taskService.getTasks();
-    this.cdr.markForCheck();
+    this.ngZone.run(() => {
+      this.tasks = this.taskService.getTasks();
+      this.cdr.markForCheck();
+    });
   }
 
   confirmDeleteTask(id: string): void {
@@ -121,10 +126,13 @@ export class HomePage implements OnInit, OnDestroy {
   async onDeleteConfirm(): Promise<void> {
     if (!this.deleteTargetId) return;
     await this.taskService.deleteTask(this.deleteTargetId);
-    this.tasks = this.taskService.getTasks();
-    this.showDeleteConfirm = false;
-    this.deleteTargetId = null;
-    this.showSuccess('Tarea eliminada');
+    this.ngZone.run(() => {
+      this.tasks = this.taskService.getTasks();
+      this.showDeleteConfirm = false;
+      this.deleteTargetId = null;
+      this.showSuccess('Tarea eliminada');
+      this.cdr.markForCheck();
+    });
   }
 
   onCategoryFilter(categoryId: string | null): void {
