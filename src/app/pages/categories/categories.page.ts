@@ -1,5 +1,5 @@
-import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
-import { NgFor } from '@angular/common';
+import { Component, OnInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
+import { NgFor, NgIf } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import {
   IonHeader, IonToolbar, IonTitle, IonContent,
@@ -18,7 +18,7 @@ import { Category } from 'src/app/models/category.model';
   templateUrl: './categories.page.html',
   styleUrls: ['./categories.page.scss'],
   imports: [
-    NgFor, FormsModule,
+    NgFor, NgIf, FormsModule,
     IonHeader, IonToolbar, IonTitle, IonContent,
     IonList, IonItem, IonLabel, IonButton,
     IonFab, IonFabButton, IonIcon, IonModal,
@@ -37,7 +37,10 @@ export class CategoriesPage implements OnInit {
   deleteTargetId: string | null = null;
   colorOptions = ['#6366f1', '#a855f7', '#ec4899', '#ef4444', '#f59e0b', '#22c55e', '#06b6d4', '#3b82f6', '#8b5cf6', '#14b8a6'];
 
-  constructor(private categoryService: CategoryService) {
+  constructor(
+    private categoryService: CategoryService,
+    private cdr: ChangeDetectorRef,
+  ) {
     addIcons({ addOutline, createOutline, trashOutline, closeOutline, checkmarkOutline, listOutline });
   }
 
@@ -50,6 +53,7 @@ export class CategoriesPage implements OnInit {
     this.formName = '';
     this.formColor = '#6366f1';
     this.showModal = true;
+    this.cdr.markForCheck();
   }
 
   openEdit(cat: Category): void {
@@ -57,10 +61,12 @@ export class CategoriesPage implements OnInit {
     this.formName = cat.name;
     this.formColor = cat.color;
     this.showModal = true;
+    this.cdr.markForCheck();
   }
 
   closeModal(): void {
     this.showModal = false;
+    this.cdr.markForCheck();
   }
 
   async save(): Promise<void> {
@@ -72,6 +78,7 @@ export class CategoriesPage implements OnInit {
     }
     this.categories = this.categoryService.getCategories();
     this.closeModal();
+    this.cdr.markForCheck();
   }
 
   confirmDelete(id: string): void {
