@@ -69,3 +69,12 @@ testem.log
 # System files
 .DS_Store
 Thumbs.db
+
+todo-app.apk
+
+# Android build artifacts
+android/app/build/
+android/.gradle/
+android/build/
+android/captures/
+android/.externalNativeBuild/
