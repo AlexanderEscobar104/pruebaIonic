@@ -6,7 +6,7 @@ import {
   IonList, IonItem, IonLabel, IonButton,
   IonFab, IonFabButton, IonIcon, IonModal,
   IonInput, IonBackButton, IonButtons,
-  IonAlert, IonFooter,
+  IonAlert, IonFooter, IonToast,
 } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import { addOutline, createOutline, trashOutline, closeOutline, checkmarkOutline, listOutline } from 'ionicons/icons';
@@ -23,7 +23,7 @@ import { Category } from 'src/app/models/category.model';
     IonList, IonItem, IonLabel, IonButton,
     IonFab, IonFabButton, IonIcon, IonModal,
     IonInput, IonBackButton, IonButtons,
-    IonAlert, IonFooter,
+    IonAlert, IonFooter, IonToast,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -35,6 +35,8 @@ export class CategoriesPage implements OnInit {
   formColor = '#6366f1';
   showDeleteAlert = false;
   deleteTargetId: string | null = null;
+  showSuccessToast = false;
+  successMessage = '';
   colorOptions = ['#6366f1', '#a855f7', '#ec4899', '#ef4444', '#f59e0b', '#22c55e', '#06b6d4', '#3b82f6', '#8b5cf6', '#14b8a6'];
 
   constructor(
@@ -73,8 +75,10 @@ export class CategoriesPage implements OnInit {
     if (!this.formName.trim()) return;
     if (this.editingCategory) {
       await this.categoryService.updateCategory(this.editingCategory.id, this.formName, this.formColor);
+      this.showSuccess('Categoría actualizada');
     } else {
       await this.categoryService.addCategory(this.formName, this.formColor);
+      this.showSuccess('Categoría creada');
     }
     this.categories = this.categoryService.getCategories();
     this.closeModal();
@@ -90,9 +94,16 @@ export class CategoriesPage implements OnInit {
     if (this.deleteTargetId) {
       await this.categoryService.deleteCategory(this.deleteTargetId);
       this.categories = this.categoryService.getCategories();
+      this.showSuccess('Categoría eliminada');
     }
     this.showDeleteAlert = false;
     this.deleteTargetId = null;
+  }
+
+  private showSuccess(msg: string): void {
+    this.successMessage = msg;
+    this.showSuccessToast = true;
+    this.cdr.markForCheck();
   }
 
   get alertButtons() {

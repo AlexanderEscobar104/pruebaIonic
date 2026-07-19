@@ -57,7 +57,7 @@
         [category]="getTaskCategory(task.categoryId)"
         [showDeadline]="showDeadline"
         (toggle)="toggleTask($event)"
-        (delete)="deleteTask($event)"
+        (delete)="confirmDeleteTask($event)"
       />
     </ion-item-group>
 
@@ -76,6 +76,22 @@
     header="Campo vacío"
     message="Escribe el nombre de la tarea antes de agregarla."
     [buttons]="emptyAlertButtons"
+  />
+
+  <ion-alert
+    [isOpen]="showDeleteConfirm"
+    header="Eliminar tarea"
+    message="¿Estás seguro de eliminar esta tarea?"
+    [buttons]="deleteAlertButtons"
+  />
+
+  <ion-toast
+    [isOpen]="showSuccessToast"
+    [message]="successMessage"
+    [duration]="2000"
+    color="success"
+    position="bottom"
+    (didDismiss)="showSuccessToast = false"
   />
 </ion-content>
 

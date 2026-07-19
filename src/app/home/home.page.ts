@@ -9,7 +9,7 @@ import {
   IonButton, IonIcon,
   IonSegment, IonSegmentButton, IonButtons,
   IonText, IonFooter, IonSelect, IonSelectOption,
-  IonItemGroup, IonAlert,
+  IonItemGroup, IonAlert, IonToast,
 } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import { addOutline, listOutline, checkmarkDoneOutline, sparklesOutline, calendarOutline } from 'ionicons/icons';
@@ -32,7 +32,7 @@ import { CategoryFilterComponent } from 'src/app/components/category-filter/cate
     IonButton, IonIcon,
     IonSegment, IonSegmentButton, IonButtons,
     IonText, IonFooter, IonSelect, IonSelectOption,
-    IonItemGroup, IonAlert,
+    IonItemGroup, IonAlert, IonToast,
     TaskItemComponent, CategoryFilterComponent,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -46,6 +46,10 @@ export class HomePage implements OnInit, OnDestroy {
   newTaskDeadline = '';
   showDeadline = false;
   showEmptyAlert = false;
+  showDeleteConfirm = false;
+  deleteTargetId: string | null = null;
+  showSuccessToast = false;
+  successMessage = '';
   activeFilter: 'all' | 'pending' | 'completed' = 'all';
   private destroy$ = new Subject<void>();
 
@@ -98,6 +102,7 @@ export class HomePage implements OnInit, OnDestroy {
     this.newTaskTitle = '';
     this.newTaskCategory = '';
     this.newTaskDeadline = '';
+    this.showSuccess('Tarea creada');
     this.cdr.markForCheck();
   }
 
@@ -107,10 +112,19 @@ export class HomePage implements OnInit, OnDestroy {
     this.cdr.markForCheck();
   }
 
-  async deleteTask(id: string): Promise<void> {
-    await this.taskService.deleteTask(id);
-    this.tasks = this.taskService.getTasks();
+  confirmDeleteTask(id: string): void {
+    this.deleteTargetId = id;
+    this.showDeleteConfirm = true;
     this.cdr.markForCheck();
+  }
+
+  async onDeleteConfirm(): Promise<void> {
+    if (!this.deleteTargetId) return;
+    await this.taskService.deleteTask(this.deleteTargetId);
+    this.tasks = this.taskService.getTasks();
+    this.showDeleteConfirm = false;
+    this.deleteTargetId = null;
+    this.showSuccess('Tarea eliminada');
   }
 
   onCategoryFilter(categoryId: string | null): void {
@@ -127,6 +141,18 @@ export class HomePage implements OnInit, OnDestroy {
 
   get emptyAlertButtons() {
     return [{ text: 'OK', handler: () => { this.showEmptyAlert = false; } }];
+  }
+
+  get deleteAlertButtons() {
+    return [
+      { text: 'Cancelar', role: 'cancel' },
+      { text: 'Eliminar', handler: () => { this.onDeleteConfirm(); } },
+    ];
+  }
+
+  private showSuccess(msg: string): void {
+    this.successMessage = msg;
+    this.showSuccessToast = true;
   }
 
   get pendingCount(): number {

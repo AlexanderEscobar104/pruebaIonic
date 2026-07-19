@@ -93,3 +93,12 @@
   message="¿Estás seguro? Las tareas con esta categoría quedarán sin categoría."
   [buttons]="alertButtons"
 />
+
+<ion-toast
+  [isOpen]="showSuccessToast"
+  [message]="successMessage"
+  [duration]="2000"
+  color="success"
+  position="bottom"
+  (didDismiss)="showSuccessToast = false"
+/>
