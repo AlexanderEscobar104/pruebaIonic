@@ -9,7 +9,7 @@ import {
   IonAlert, IonToast,
 } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
-import { addOutline, createOutline, trashOutline, closeOutline, checkmarkOutline, listOutline } from 'ionicons/icons';
+import { addOutline, createOutline, trashOutline, closeOutline, checkmarkOutline, listOutline, logoGithub, openOutline } from 'ionicons/icons';
 import { CategoryService } from 'src/app/services/category.service';
 import { Category } from 'src/app/models/category.model';
 
@@ -44,7 +44,11 @@ export class CategoriesPage implements OnInit {
     private cdr: ChangeDetectorRef,
     private ngZone: NgZone,
   ) {
-    addIcons({ addOutline, createOutline, trashOutline, closeOutline, checkmarkOutline, listOutline });
+    addIcons({ addOutline, createOutline, trashOutline, closeOutline, checkmarkOutline, listOutline, logoGithub, openOutline });
+  }
+
+  openRepo(): void {
+    window.open('https://github.com/AlexanderEscobar104/pruebaIonic', '_blank');
   }
 
   ngOnInit(): void {

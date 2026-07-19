@@ -12,7 +12,7 @@ import {
   IonItemGroup, IonAlert, IonToast,
 } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
-import { addOutline, listOutline, checkmarkDoneOutline, sparklesOutline, calendarOutline } from 'ionicons/icons';
+import { addOutline, listOutline, checkmarkDoneOutline, sparklesOutline, calendarOutline, logoGithub, openOutline } from 'ionicons/icons';
 import { TaskService } from 'src/app/services/task.service';
 import { CategoryService } from 'src/app/services/category.service';
 import { RemoteConfigService } from 'src/app/services/remote-config.service';
@@ -60,7 +60,11 @@ export class HomePage implements OnInit, OnDestroy {
     private cdr: ChangeDetectorRef,
     private ngZone: NgZone,
   ) {
-    addIcons({ addOutline, listOutline, checkmarkDoneOutline, sparklesOutline, calendarOutline });
+    addIcons({ addOutline, listOutline, checkmarkDoneOutline, sparklesOutline, calendarOutline, logoGithub, openOutline });
+  }
+
+  openRepo(): void {
+    window.open('https://github.com/AlexanderEscobar104/pruebaIonic', '_blank');
   }
 
   ngOnInit(): void {
