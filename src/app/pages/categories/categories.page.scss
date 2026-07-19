@@ -147,19 +147,9 @@
   font-weight: 700;
 }
 
-.name-row {
-  display: flex;
-  gap: 8px;
-  align-items: center;
-
-  ion-input {
-    flex: 1;
-  }
-}
-
-.save-inline-btn {
+.modal-save-btn {
+  margin-top: 24px;
   --border-radius: 12px;
-  height: 48px;
-  width: 48px;
-  flex-shrink: 0;
+  height: 50px;
+  font-size: 1rem;
 }
