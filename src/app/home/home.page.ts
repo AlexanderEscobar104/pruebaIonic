@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, ChangeDetectionStrategy } from '@angular/core';
+import { Component, OnInit, OnDestroy, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { NgFor, NgIf } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
@@ -9,7 +9,7 @@ import {
   IonButton, IonIcon,
   IonSegment, IonSegmentButton, IonButtons,
   IonText, IonFooter, IonSelect, IonSelectOption,
-  IonItemGroup,
+  IonItemGroup, IonAlert,
 } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import { addOutline, listOutline, checkmarkDoneOutline, sparklesOutline, calendarOutline } from 'ionicons/icons';
@@ -32,7 +32,7 @@ import { CategoryFilterComponent } from 'src/app/components/category-filter/cate
     IonButton, IonIcon,
     IonSegment, IonSegmentButton, IonButtons,
     IonText, IonFooter, IonSelect, IonSelectOption,
-    IonItemGroup,
+    IonItemGroup, IonAlert,
     TaskItemComponent, CategoryFilterComponent,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -45,6 +45,7 @@ export class HomePage implements OnInit, OnDestroy {
   newTaskCategory = '';
   newTaskDeadline = '';
   showDeadline = false;
+  showEmptyAlert = false;
   activeFilter: 'all' | 'pending' | 'completed' = 'all';
   private destroy$ = new Subject<void>();
 
@@ -52,6 +53,7 @@ export class HomePage implements OnInit, OnDestroy {
     private taskService: TaskService,
     private categoryService: CategoryService,
     private remoteConfig: RemoteConfigService,
+    private cdr: ChangeDetectorRef,
   ) {
     addIcons({ addOutline, listOutline, checkmarkDoneOutline, sparklesOutline, calendarOutline });
   }
@@ -87,22 +89,28 @@ export class HomePage implements OnInit, OnDestroy {
 
   async addTask(): Promise<void> {
     const title = this.newTaskTitle.trim();
-    if (!title) return;
+    if (!title) {
+      this.showEmptyAlert = true;
+      return;
+    }
     await this.taskService.addTask(title, this.newTaskCategory || undefined, this.newTaskDeadline || undefined);
     this.tasks = this.taskService.getTasks();
     this.newTaskTitle = '';
     this.newTaskCategory = '';
     this.newTaskDeadline = '';
+    this.cdr.markForCheck();
   }
 
   async toggleTask(id: string): Promise<void> {
     await this.taskService.toggleTask(id);
     this.tasks = this.taskService.getTasks();
+    this.cdr.markForCheck();
   }
 
   async deleteTask(id: string): Promise<void> {
     await this.taskService.deleteTask(id);
     this.tasks = this.taskService.getTasks();
+    this.cdr.markForCheck();
   }
 
   onCategoryFilter(categoryId: string | null): void {
@@ -115,6 +123,10 @@ export class HomePage implements OnInit, OnDestroy {
 
   trackById(_index: number, item: Task): string {
     return item.id;
+  }
+
+  get emptyAlertButtons() {
+    return [{ text: 'OK', handler: () => { this.showEmptyAlert = false; } }];
   }
 
   get pendingCount(): number {

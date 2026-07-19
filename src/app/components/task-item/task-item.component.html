@@ -1,24 +1,33 @@
-<ion-item [class.completed]="task.completed" class="task-card">
-  <div class="checkbox-wrap" slot="start" (click)="onToggle()">
-    <div class="custom-checkbox" [class.checked]="task.completed">
-      <ion-icon *ngIf="task.completed" name="checkmark-circle" class="check-icon" />
-      <ion-icon *ngIf="!task.completed" name="ellipse-outline" class="uncheck-icon" />
+<ion-item-sliding>
+  <ion-item [class.completed]="task.completed" class="task-card">
+    <div class="checkbox-wrap" slot="start" (click)="onToggle()">
+      <div class="custom-checkbox" [class.checked]="task.completed">
+        <ion-icon *ngIf="task.completed" name="checkmark-circle" class="check-icon" />
+        <ion-icon *ngIf="!task.completed" name="ellipse-outline" class="uncheck-icon" />
+      </div>
     </div>
-  </div>
 
-  <ion-label class="task-label">
-    <span class="task-title" [class.line-through]="task.completed">{{ task.title }}</span>
-    <div class="task-meta">
-      <span *ngIf="category" class="category-badge" [ngStyle]="{ background: category.color }">
-        {{ category.name }}
-      </span>
-      <span *ngIf="showDeadline && task.deadline" class="deadline">
-        {{ task.deadline | date:'shortDate' }}
-      </span>
-    </div>
-  </ion-label>
+    <ion-label class="task-label">
+      <span class="task-title" [class.line-through]="task.completed">{{ task.title }}</span>
+      <div class="task-meta">
+        <span *ngIf="category" class="category-badge" [ngStyle]="{ background: category.color }">
+          {{ category.name }}
+        </span>
+        <span *ngIf="showDeadline && task.deadline" class="deadline">
+          {{ task.deadline | date:'shortDate' }}
+        </span>
+      </div>
+    </ion-label>
 
-  <ion-button slot="end" fill="clear" class="delete-btn" (click)="onDelete()">
-    <ion-icon name="trash-outline" slot="icon-only" />
-  </ion-button>
-</ion-item>
+    <ion-button slot="end" fill="clear" class="delete-btn" (click)="onDelete()">
+      <ion-icon name="trash-outline" slot="icon-only" />
+    </ion-button>
+  </ion-item>
+
+  <ion-item-options side="end">
+    <ion-item-option color="success" (click)="onToggle()" class="swipe-complete">
+      <ion-icon slot="start" name="checkmark-circle" />
+      Completar
+    </ion-item-option>
+  </ion-item-options>
+</ion-item-sliding>

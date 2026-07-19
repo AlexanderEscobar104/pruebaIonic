@@ -1,5 +1,5 @@
 import { Component, Input, Output, EventEmitter, ChangeDetectionStrategy } from '@angular/core';
-import { IonItem, IonLabel, IonCheckbox, IonButton, IonIcon } from '@ionic/angular/standalone';
+import { IonItem, IonLabel, IonButton, IonIcon, IonItemSliding, IonItemOptions, IonItemOption } from '@ionic/angular/standalone';
 import { NgIf, NgStyle, DatePipe } from '@angular/common';
 import { Task } from 'src/app/models/task.model';
 import { Category } from 'src/app/models/category.model';
@@ -9,7 +9,7 @@ import { addIcons } from 'ionicons';
 @Component({
   selector: 'app-task-item',
   templateUrl: './task-item.component.html',
-  imports: [IonItem, IonLabel, IonCheckbox, IonButton, IonIcon, NgIf, NgStyle, DatePipe],
+  imports: [IonItem, IonLabel, IonButton, IonIcon, IonItemSliding, IonItemOptions, IonItemOption, NgIf, NgStyle, DatePipe],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class TaskItemComponent {
