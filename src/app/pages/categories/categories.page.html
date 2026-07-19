@@ -55,11 +55,20 @@
     <ion-content class="ion-padding modal-content">
       <div class="modal-field">
         <label class="field-label">Nombre</label>
-        <ion-input
-          [(ngModel)]="formName"
-          placeholder="Ej: Personal, Trabajo..."
-          class="modern-input"
-        />
+        <div class="name-row">
+          <ion-input
+            [(ngModel)]="formName"
+            placeholder="Ej: Personal, Trabajo..."
+            class="modern-input"
+          />
+          <ion-button
+            class="save-inline-btn"
+            (click)="save()"
+            [disabled]="!formName.trim()"
+          >
+            <ion-icon slot="icon-only" name="checkmark-outline" />
+          </ion-button>
+        </div>
       </div>
 
       <div class="modal-field">
@@ -75,11 +84,6 @@
             <ion-icon *ngIf="formColor === c" name="checkmark-outline" class="check-icon" />
           </div>
         </div>
-      </div>
-      <div class="modal-save-btn">
-        <ion-button expand="block" (click)="save()" [disabled]="!formName.trim()">
-          {{ editingCategory ? 'Guardar cambios' : 'Crear categoría' }}
-        </ion-button>
       </div>
     </ion-content>
   </ng-template>
