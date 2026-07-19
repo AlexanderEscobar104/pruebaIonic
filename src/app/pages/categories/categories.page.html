@@ -76,14 +76,12 @@
           </div>
         </div>
       </div>
-    </ion-content>
-    <ion-footer class="ion-no-border">
-      <div class="modal-footer">
+      <div class="modal-save-btn">
         <ion-button expand="block" (click)="save()" [disabled]="!formName.trim()">
           {{ editingCategory ? 'Guardar cambios' : 'Crear categoría' }}
         </ion-button>
       </div>
-    </ion-footer>
+    </ion-content>
   </ng-template>
 </ion-modal>
 

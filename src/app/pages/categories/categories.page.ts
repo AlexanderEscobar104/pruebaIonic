@@ -6,7 +6,7 @@ import {
   IonList, IonItem, IonLabel, IonButton,
   IonFab, IonFabButton, IonIcon, IonModal,
   IonInput, IonBackButton, IonButtons,
-  IonAlert, IonFooter, IonToast,
+  IonAlert, IonToast,
 } from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import { addOutline, createOutline, trashOutline, closeOutline, checkmarkOutline, listOutline } from 'ionicons/icons';
@@ -23,7 +23,7 @@ import { Category } from 'src/app/models/category.model';
     IonList, IonItem, IonLabel, IonButton,
     IonFab, IonFabButton, IonIcon, IonModal,
     IonInput, IonBackButton, IonButtons,
-    IonAlert, IonFooter, IonToast,
+    IonAlert, IonToast,
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
